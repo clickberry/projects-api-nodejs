@@ -10,5 +10,40 @@ module.exports = function (passport) {
         res.send();
     });
 
+    router.post('/',
+        passport.authenticate('access-token', {session: false, assignProperty: 'payload'}),
+        function(req,res, next){
+
+    });
+
+    router.get('/',
+        passport.authenticate('access-token', {session: false, assignProperty: 'payload'}),
+        function(req,res, next){
+
+    });
+
+    router.get('/all',
+        function(req,res, next){
+
+        });
+
+    router.get('/:projectId',
+        passport.authenticate('access-token', {session: false, assignProperty: 'payload'}),
+        function(req,res, next){
+
+    });
+
+    router.put('/:projectId',
+        passport.authenticate('access-token', {session: false, assignProperty: 'payload'}),
+        function(req,res, next){
+
+        });
+
+    router.delete('/:projectId',
+        passport.authenticate('access-token', {session: false, assignProperty: 'payload'}),
+        function(req,res, next){
+
+    });
+
     return router;
 };
