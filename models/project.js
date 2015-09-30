@@ -1,13 +1,14 @@
 var mongoose = require('mongoose');
 var moment = require('moment');
+var Schema = mongoose.Schema;
 
-var projectSchema = mongoose.Schema({
+var projectSchema = new Schema({
     userId: String,
     name: String,
     description: String,
     metadataUri: String,
     created: Date,
-    isPrivate: Boolean,
+    isPrivate: {type: Boolean, default: false},
     videos: [new Schema({
         contentType: String,
         uri: String,
@@ -23,8 +24,6 @@ var projectSchema = mongoose.Schema({
         uri: String
     }, {_id: false})]
 });
-
-var Project = module.exports = mongoose.model('Project', projectSchema);
 
 projectSchema.statics.create = function (userId, data, callback) {
     var project = new Project({
@@ -47,9 +46,9 @@ projectSchema.statics.findNext = function (lastProjectId, top, callback) {
     Project.find(
         {
             isPrivate: false,
-            _id: {$lt: lastProjectId}
+            _id: {$gt: lastProjectId}
         }, null, {
-            sort: {created: -1},
+            sort: {created: 1},
             limit: top
         }, function (err, projects) {
             callback(err, projects);
@@ -75,7 +74,7 @@ projectSchema.statics.getById = function (projectId, userId, callback) {
     });
 };
 
-projectSchema.statics.edit = function (userId, projectId, editedFields, callback) {
+projectSchema.statics.edit = function (projectId, userId, editedFields, callback) {
     Project.getById(projectId, userId, function (err, project) {
         if (err) {
             return callback(err);
@@ -85,12 +84,8 @@ projectSchema.statics.edit = function (userId, projectId, editedFields, callback
             return callback(new Error('Forbidden to edit project.'));
         }
 
-        project.update(editedFields, function (err, newProject) {
-            if (err) {
-                return callback(err);
-            }
-
-            callback(null, newProject);
+        project.updateFields(editedFields, function (err, newProject) {
+            callback(err, newProject);
         });
     });
 };
@@ -110,3 +105,26 @@ projectSchema.statics.delete = function (projectId, userId, callback) {
         });
     });
 };
+
+projectSchema.methods.updateFields = function (editedFields, callback) {
+    var project = this;
+
+    if (editedFields.name) {
+        project.name = editedFields.name;
+    }
+    if (editedFields.description) {
+        project.description = editedFields.description;
+    }
+    if (editedFields.metadataUri) {
+        project.metadataUri = editedFields.metadataUri;
+    }
+    if (editedFields.images) {
+        project.images = editedFields.images;
+    }
+
+    project.save(function (err, status) {
+        callback(err, project, status);
+    });
+};
+
+var Project = module.exports = mongoose.model('Project', projectSchema);

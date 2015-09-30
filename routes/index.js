@@ -1,9 +1,11 @@
 var express = require('express');
+var signature=require('../middleware/signature-mw');
 
 var Project = require('../models/project');
 
 var Bus = require('../lib/bus-service');
 var bus = new Bus({});
+
 
 var router = express.Router();
 
@@ -14,11 +16,13 @@ module.exports = function (passport) {
 
     router.post('/',
         passport.authenticate('access-token', {session: false, assignProperty: 'payload'}),
-        //signature.checkVideo,
+        signature.checkVideos,
+        signature.checkScreenshots,
         function (req, res, next) {
             var userId = req.payload.userId;
+            var data = req.body;
 
-            Project.create(userId, req.body, function (err, project) {
+            Project.create(userId, data, function (err, project) {
                 if (err) {
                     return next(err);
                 }
@@ -78,7 +82,7 @@ module.exports = function (passport) {
         function (req, res, next) {
             var userId = req.payload.userId;
             var projectId = req.params.projectId;
-            var editedFields = mapToEditedFields(req.body);
+            var editedFields = req.body;
 
             Project.edit(projectId, userId, editedFields, function (err, project) {
                 if (err) {
@@ -117,30 +121,7 @@ function projectMapper(project) {
         videos: project.videos,
         screenshots: project.screenshots,
         images: project.images,
+        isPrivate: project.isPrivate,
         created: project.created
     };
-}
-
-function mapToEditedFields(project) {
-    var editedFields = {};
-    if (project.name) {
-        editedFields.name = project.name;
-    }
-    if (project.description) {
-        editedFields.description = project.description;
-    }
-    if (project.metadataUri) {
-        editedFields.metadataUri = project.metadataUri;
-    }
-    if (project.images) {
-        editedFields.images = project.images;
-    }
-
-    return project;
-    //return {
-    //    name: project.name || undefined,
-    //    description: project.description || undefined,
-    //    metadataUri: project.metadataUri || undefined,
-    //    images: project.images || undefined
-    //}
 }
