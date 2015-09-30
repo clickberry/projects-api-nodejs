@@ -28,8 +28,14 @@ module.exports = function (passport) {
                 }
 
                 var projectDto = projectMapper(project);
-                res.status(201);
-                res.send(projectDto);
+                bus.publishProjectCreate(projectDto, function(err){
+                    if (err) {
+                        return next(err);
+                    }
+
+                    res.status(201);
+                    res.send(projectDto);
+                });
             });
         });
 
@@ -104,7 +110,13 @@ module.exports = function (passport) {
                     return next(err);
                 }
 
-                res.sendStatus(200);
+                bus.publishProjectRemove({projectId: projectId}, function(err){
+                    if (err) {
+                        return next(err);
+                    }
+
+                    res.sendStatus(200);
+                });
             });
         });
 
