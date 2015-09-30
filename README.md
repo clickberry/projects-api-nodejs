@@ -60,14 +60,14 @@ project-removes | {projectId: *projectId*} | Project ID.
 | uri     | Uri of encoding video|
 | width     | Width of video frame|
 | height     | Height of video frame |
-| sign     | Uri signature. **Only for request**|
+| sign     | Uri signature. **Only for Request**|
 
 ### Encodeded Screenshot Dto
 | Param   | Description |
 |----------|-------------|
 | contentType     | Content type such as *image/jpeg*|
 | uri     | Uri of encoding screenshot|
-| sign     | Uri signature. **Only for request** |
+| sign     | Uri signature. **Only for Request** |
 
 ### Image Dto
 | Param   | Description |
