@@ -1,6 +1,6 @@
 {
   "name": "clickberry-projects-api",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "main": "app.js",
   "description": "Projects micro-service on Node.js",
   "scripts": {
@@ -30,6 +30,7 @@
     "events": "^1.0.2",
     "express": "~4.12.4",
     "jsonwebtoken": "^5.0.4",
+    "moment": "^2.10.6",
     "mongoose": "^4.1.1",
     "morgan": "~1.5.3",
     "nconf": "^0.7.1",
