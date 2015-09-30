@@ -1,4 +1,4 @@
-# Dockerized Videos API
+# Dockerized Projects API
 Projects micro-service on Node.js. This a micro-service for link together videos, screenshots, images, metadata and etc.
 
 * [Architecture](#architecture)
