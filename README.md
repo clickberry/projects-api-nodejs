@@ -117,14 +117,9 @@ Get all user projects.
 | Body | [Project Dto](#project-dto)                                                            |
 
 ## GET /all?last=&top=
-Get all projects from all users.
+Get all public projects from all users.
 
 ### Request
-#### Header
-| Param   | Value |
-|----------|-------------|
-| Authorization     | "JWT [accessToken]" |
-
 ### Query Param
 | Param    | Description |
 |----------|-------------|
