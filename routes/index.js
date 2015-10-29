@@ -17,7 +17,6 @@ module.exports = function (passport) {
     router.post('/',
         passport.authenticate('access-token', {session: false, assignProperty: 'payload'}),
         signature.checkVideos,
-        signature.checkScreenshots,
         function (req, res, next) {
             var userId = req.payload.userId;
             var data = req.body;
@@ -129,10 +128,8 @@ function projectMapper(project) {
         userId: project.userId,
         name: project.name,
         description: project.description,
-        metadataUri: project.metadataUri,
+        imageUri: project.imageUri,
         videos: project.videos,
-        screenshots: project.screenshots,
-        images: project.images,
         isPrivate: project.isPrivate,
         created: project.created
     };
