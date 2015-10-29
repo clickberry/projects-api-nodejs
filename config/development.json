@@ -4,7 +4,8 @@
     "port": "8080"
   },
   "token": {
-    "accessSecret": "my access secret key"
+    "accessSecret": "my access secret key",
+    "relationSecret": "my relation secret key"
   },
   "sign": {
     "secret": "signature secret"

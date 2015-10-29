@@ -1,11 +1,14 @@
 var express = require('express');
-var signature=require('../middleware/signature-mw');
+var signature = require('../middleware/signature-mw');
 
 var Project = require('../models/project');
 
 var Bus = require('../lib/bus-service');
 var bus = new Bus({});
 
+var config = require('../config');
+var RelationToken = require('../lib/relation-token');
+var relationToken = new RelationToken(config.get("token:accessSecret"));
 
 var router = express.Router();
 
@@ -27,7 +30,7 @@ module.exports = function (passport) {
                 }
 
                 var projectDto = projectMapper(project);
-                bus.publishProjectCreate(projectDto, function(err){
+                bus.publishProjectCreate(projectDto, function (err) {
                     if (err) {
                         return next(err);
                     }
@@ -95,7 +98,7 @@ module.exports = function (passport) {
                 }
 
                 var projectDto = projectMapper(project);
-                bus.publishProjectEdit(projectDto, function(err){
+                bus.publishProjectEdit(projectDto, function (err) {
                     if (err) {
                         return next(err);
                     }
@@ -115,7 +118,7 @@ module.exports = function (passport) {
                     return next(err);
                 }
 
-                bus.publishProjectRemove({projectId: projectId}, function(err){
+                bus.publishProjectRemove({projectId: projectId}, function (err) {
                     if (err) {
                         return next(err);
                     }
@@ -137,6 +140,7 @@ function projectMapper(project) {
         imageUri: project.imageUri,
         videos: project.videos,
         isPrivate: project.isPrivate,
-        created: project.created
+        created: project.created,
+        relationToken: relationToken.create(project._id, project.userId)
     };
 }
