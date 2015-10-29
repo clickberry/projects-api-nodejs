@@ -46,12 +46,12 @@ project-removes | {projectId: *projectId*} | Project ID.
 | id     | Project ID.|
 | userId     | Owner user ID|
 | name     | Name of project|
+| description     | Description of project|
 | created     | Date of create project|
 | videos     | List of [Encoded videos](#encodeded-video-dto)|
-| screenshots     | List of [Encoded screenshots](#encodeded-screenshot-dto)|
-| images| List of [Images](#image-dto) |
-| metadataUri | Uri of metadata |
+| imageUri | Uri of image |
 | isPrivate| Private statate - true/false |
+| relationToken| JWT with {id: *entity ID*, ownerId: *user ID of entity owner*}|
 
 ### Encodeded Video Dto
 | Param   | Description |
@@ -61,19 +61,6 @@ project-removes | {projectId: *projectId*} | Project ID.
 | width     | Width of video frame|
 | height     | Height of video frame |
 | sign     | Uri signature. **Only for Request**|
-
-### Encodeded Screenshot Dto
-| Param   | Description |
-|----------|-------------|
-| contentType     | Content type such as *image/jpeg*|
-| uri     | Uri of encoding screenshot|
-| sign     | Uri signature. **Only for Request** |
-
-### Image Dto
-| Param   | Description |
-|----------|-------------|
-| contentType     | Content type such as *image/jpeg*|
-| uri     | Uri of encoding screenshot|
 
 ## POST /
 Creates project.
@@ -88,17 +75,38 @@ Creates project.
 | Param    | Description |
 |----------|-------------|
 | name     | Name of project|
-| created     | Date of create project|
+| description     | Description of project|
 | videos     | List of [Encoded videos](#encodeded-video-dto)|
-| screenshots     | List of [Encoded screenshots](#encodeded-screenshot-dto)|
-| images| List of [Images](#image-dto) |
-| metadataUri | Uri of metadata |
+| imageUri | Uri of image |
 | isPrivate| Private statate - true/false |
 
 ### Response
 | HTTP       |      Value                                                         |
 |------------|--------------------------------------------------------------------|
 | StatusCode | 201                                                                |
+| Body |  [Project Dto](#project-dto)                                                             |
+
+## PUT /
+Edits project.
+
+### Request
+#### Header
+| Param   | Value |
+|----------|-------------|
+| Authorization     | "JWT [accessToken]" |
+
+#### Body 
+| Param    | Description |
+|----------|-------------|
+| name     | Name of project|
+| description     | Description of project|
+| imageUri | Uri of image |
+| isPrivate| Private statate - true/false |
+
+### Response
+| HTTP       |      Value                                                         |
+|------------|--------------------------------------------------------------------|
+| StatusCode | 200                                                                |
 | Body |  [Project Dto](#project-dto)                                                             |
 
 ## GET /
