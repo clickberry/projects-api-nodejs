@@ -25,6 +25,7 @@ Key | Value | Description
 :-- | :-- | :-- 
 MONGODB_CONNECTION | mongodb://mongo_host:mongo_port/videos | MongoDB connection string.
 TOKEN_ACCESSSECRET | MDdDRDhBOD*** | Access token secret.
+TOKEN_RELATIONSECRET | MDdDRDhBOD*** | Relation token secret.
 NSQD_ADDRESS | bus.yourdomain.com | A hostname or an IP address of the NSQD running instance.
 NSQD_PORT | 4150 | A TCP port number of the NSQD running instance to publish events.
 SIGN_SECRET | MDdDRDhBOD*** | Sekret key for verify signed videos and screenshots URI-s.
