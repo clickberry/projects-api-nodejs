@@ -37,6 +37,7 @@ The service generates events to the Bus (messaging service) in response to API r
 Topic | Message | Description
 :-- | :-- | :--
 project-creates | [Project Dto](#project-dto) | Created project.
+project-edits | [Project Dto](#project-dto) | Edited project.
 project-removes | {projectId: *projectId*} | Project ID.
 
 # API
@@ -87,7 +88,7 @@ Creates project.
 | StatusCode | 201                                                                |
 | Body |  [Project Dto](#project-dto)                                                             |
 
-## PUT /
+## PUT /:projectId
 Edits project.
 
 ### Request
@@ -111,7 +112,7 @@ Edits project.
 | Body |  [Project Dto](#project-dto)                                                             |
 
 ## GET /
-Get all user projects.
+Gets all user projects.
 
 ### Request
 #### Header
@@ -126,7 +127,7 @@ Get all user projects.
 | Body | [Project Dto](#project-dto)                                                            |
 
 ## GET /all?last=&top=
-Get all public projects from all users.
+Gets all public projects from all users.
 
 ### Request
 ### Query Param
@@ -142,7 +143,7 @@ Get all public projects from all users.
 | Body | [Project Dto](#project-dto)                                                            |
 
 ## GET /:projectId
-Get user project by id.
+Gets user project by id.
 
 ### Request
 #### Header
@@ -157,7 +158,7 @@ Get user project by id.
 | Body | [Project Dto](#project-dto)                                                            |
 
 ## DELETE /:projectId
-Remove user project by id.
+Removes user project by id.
 
 ### Request
 #### Header
