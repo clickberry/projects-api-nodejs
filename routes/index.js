@@ -95,7 +95,13 @@ module.exports = function (passport) {
                 }
 
                 var projectDto = projectMapper(project);
-                res.send(projectDto);
+                bus.publishProjectEdit(projectDto, function(err){
+                    if (err) {
+                        return next(err);
+                    }
+
+                    res.send(projectDto);
+                });
             });
         });
 
