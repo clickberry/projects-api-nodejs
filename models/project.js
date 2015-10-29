@@ -6,7 +6,7 @@ var projectSchema = new Schema({
     userId: String,
     name: String,
     description: String,
-    metadataUri: String,
+    imageUri: String,
     created: Date,
     isPrivate: {type: Boolean, default: false},
     videos: [new Schema({
@@ -14,14 +14,6 @@ var projectSchema = new Schema({
         uri: String,
         width: Number,
         height: Number
-    }, {_id: false})],
-    screenshots: [new Schema({
-        contentType: String,
-        uri: String
-    }, {_id: false})],
-    images: [new Schema({
-        contentType: String,
-        uri: String
     }, {_id: false})]
 });
 
@@ -30,10 +22,8 @@ projectSchema.statics.create = function (userId, data, callback) {
         userId: userId,
         name: data.name,
         description: data.description,
-        metadataUri: data.metadataUri,
+        imageUri: data.imageUri,
         videos: data.videos,
-        screenshots: data.screenshots,
-        images: data.images,
         created: moment.utc()
     });
 
@@ -115,11 +105,11 @@ projectSchema.methods.updateFields = function (editedFields, callback) {
     if (editedFields.description) {
         project.description = editedFields.description;
     }
-    if (editedFields.metadataUri) {
-        project.metadataUri = editedFields.metadataUri;
+    if (editedFields.imageUri) {
+        project.imageUri = editedFields.imageUri;
     }
-    if (editedFields.images) {
-        project.images = editedFields.images;
+    if (editedFields.isPrivate) {
+        project.isPrivate = editedFields.isPrivate;
     }
 
     project.save(function (err, status) {

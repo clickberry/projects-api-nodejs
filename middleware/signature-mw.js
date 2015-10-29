@@ -15,18 +15,6 @@ exports.checkVideos = function (req, res, next) {
     }
 };
 
-exports.checkScreenshots = function (req, res, next) {
-    var screenshots = req.body.screenshots || [];
-
-    var result = screenshots.every(checkUriSign);
-
-    if (!result) {
-        next(new Error('Bad request. Screenshot signature is bad.'))
-    } else {
-        next();
-    }
-};
-
 function checkUriSign(item) {
     var sign = item.sign;
     var message = item.uri;
