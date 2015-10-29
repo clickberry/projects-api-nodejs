@@ -139,7 +139,7 @@ function projectMapper(project) {
         description: project.description,
         imageUri: project.imageUri,
         videos: project.videos,
-        isPrivate: project.isPrivate,
+        isPrivate: project.isPrivate || false,
         created: project.created,
         relationToken: relationToken.create(project._id, project.userId)
     };
