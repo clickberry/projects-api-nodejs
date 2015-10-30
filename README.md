@@ -25,6 +25,7 @@ Key | Value | Description
 :-- | :-- | :-- 
 MONGODB_CONNECTION | mongodb://mongo_host:mongo_port/videos | MongoDB connection string.
 TOKEN_ACCESSSECRET | MDdDRDhBOD*** | Access token secret.
+TOKEN_RELATIONSECRET | MDdDRDhBOD*** | Relation token secret.
 NSQD_ADDRESS | bus.yourdomain.com | A hostname or an IP address of the NSQD running instance.
 NSQD_PORT | 4150 | A TCP port number of the NSQD running instance to publish events.
 SIGN_SECRET | MDdDRDhBOD*** | Sekret key for verify signed videos and screenshots URI-s.
@@ -36,6 +37,7 @@ The service generates events to the Bus (messaging service) in response to API r
 Topic | Message | Description
 :-- | :-- | :--
 project-creates | [Project Dto](#project-dto) | Created project.
+project-edits | [Project Dto](#project-dto) | Edited project.
 project-removes | {projectId: *projectId*} | Project ID.
 
 # API
@@ -46,12 +48,12 @@ project-removes | {projectId: *projectId*} | Project ID.
 | id     | Project ID.|
 | userId     | Owner user ID|
 | name     | Name of project|
+| description     | Description of project|
 | created     | Date of create project|
 | videos     | List of [Encoded videos](#encodeded-video-dto)|
-| screenshots     | List of [Encoded screenshots](#encodeded-screenshot-dto)|
-| images| List of [Images](#image-dto) |
-| metadataUri | Uri of metadata |
+| imageUri | Uri of image |
 | isPrivate| Private statate - true/false |
+| relationToken| JWT with {id: *entity ID*, ownerId: *user ID of entity owner*}|
 
 ### Encodeded Video Dto
 | Param   | Description |
@@ -61,19 +63,6 @@ project-removes | {projectId: *projectId*} | Project ID.
 | width     | Width of video frame|
 | height     | Height of video frame |
 | sign     | Uri signature. **Only for Request**|
-
-### Encodeded Screenshot Dto
-| Param   | Description |
-|----------|-------------|
-| contentType     | Content type such as *image/jpeg*|
-| uri     | Uri of encoding screenshot|
-| sign     | Uri signature. **Only for Request** |
-
-### Image Dto
-| Param   | Description |
-|----------|-------------|
-| contentType     | Content type such as *image/jpeg*|
-| uri     | Uri of encoding screenshot|
 
 ## POST /
 Creates project.
@@ -88,11 +77,9 @@ Creates project.
 | Param    | Description |
 |----------|-------------|
 | name     | Name of project|
-| created     | Date of create project|
+| description     | Description of project|
 | videos     | List of [Encoded videos](#encodeded-video-dto)|
-| screenshots     | List of [Encoded screenshots](#encodeded-screenshot-dto)|
-| images| List of [Images](#image-dto) |
-| metadataUri | Uri of metadata |
+| imageUri | Uri of image |
 | isPrivate| Private statate - true/false |
 
 ### Response
@@ -101,8 +88,31 @@ Creates project.
 | StatusCode | 201                                                                |
 | Body |  [Project Dto](#project-dto)                                                             |
 
+## PUT /:projectId
+Edits project.
+
+### Request
+#### Header
+| Param   | Value |
+|----------|-------------|
+| Authorization     | "JWT [accessToken]" |
+
+#### Body 
+| Param    | Description |
+|----------|-------------|
+| name     | Name of project|
+| description     | Description of project|
+| imageUri | Uri of image |
+| isPrivate| Private statate - true/false |
+
+### Response
+| HTTP       |      Value                                                         |
+|------------|--------------------------------------------------------------------|
+| StatusCode | 200                                                                |
+| Body |  [Project Dto](#project-dto)                                                             |
+
 ## GET /
-Get all user projects.
+Gets all user projects.
 
 ### Request
 #### Header
@@ -117,7 +127,7 @@ Get all user projects.
 | Body | [Project Dto](#project-dto)                                                            |
 
 ## GET /all?last=&top=
-Get all public projects from all users.
+Gets all public projects from all users.
 
 ### Request
 ### Query Param
@@ -133,7 +143,7 @@ Get all public projects from all users.
 | Body | [Project Dto](#project-dto)                                                            |
 
 ## GET /:projectId
-Get user project by id.
+Gets user project by id.
 
 ### Request
 #### Header
@@ -148,7 +158,7 @@ Get user project by id.
 | Body | [Project Dto](#project-dto)                                                            |
 
 ## DELETE /:projectId
-Remove user project by id.
+Removes user project by id.
 
 ### Request
 #### Header
