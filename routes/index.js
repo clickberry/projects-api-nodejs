@@ -8,7 +8,7 @@ var bus = new Bus({});
 
 var config = require('../config');
 var RelationToken = require('../lib/relation-token');
-var relationToken = new RelationToken(config.get("token:accessSecret"));
+var relationToken = new RelationToken(config.get("token:relationSecret"));
 
 var router = express.Router();
 
