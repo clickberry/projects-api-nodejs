@@ -148,8 +148,8 @@ Gets project by id. Anonymous user gets project if *isPrivate=false*.
 
 ### Request
 #### Header
-| Param   | Value |
-|----------|-------------|
+| Param   | Value ||
+|----------|-------------|---|
 | Authorization     | "JWT [accessToken]" |**Optianal**|
 
 ### Response
