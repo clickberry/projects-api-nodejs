@@ -53,6 +53,7 @@ project-removes | {projectId: *projectId*} | Project ID.
 | videos     | List of [Encoded videos](#encodeded-video-dto)|
 | imageUri | Uri of image |
 | isPrivate| Private statate - true/false |
+| isHidden| Hidden statate - true/false |
 | relationToken| JWT with {id: *entity ID*, ownerId: *user ID of entity owner*}|
 
 ### Encodeded Video Dto
@@ -143,13 +144,13 @@ Gets all public projects from all users.
 | Body | [Project Dto](#project-dto)                                                            |
 
 ## GET /:projectId
-Gets user project by id.
+Gets project by id. Anonymous user gets project if *isPrivate=false*.
 
 ### Request
 #### Header
 | Param   | Value |
 |----------|-------------|
-| Authorization     | "JWT [accessToken]" |
+| Authorization     | "JWT [accessToken]" |**Optianal**|
 
 ### Response
 | HTTP       |      Value                                                         |
