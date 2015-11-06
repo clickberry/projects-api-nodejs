@@ -9,6 +9,7 @@ var projectSchema = new Schema({
     imageUri: String,
     created: Date,
     isPrivate: {type: Boolean, default: false},
+    isHidden: {type: Boolean, default: false},
     videos: [new Schema({
         contentType: String,
         uri: String,
@@ -23,6 +24,7 @@ projectSchema.statics.create = function (userId, data, callback) {
         name: data.name,
         description: data.description,
         isPrivate: data.isPrivate,
+        isHidden: data.isHidden,
         imageUri: data.imageUri,
         videos: data.videos,
         created: moment.utc()
@@ -34,11 +36,16 @@ projectSchema.statics.create = function (userId, data, callback) {
 };
 
 projectSchema.statics.findNext = function (lastProjectId, top, callback) {
-    Project.find(
-        {
-            isPrivate: false,
-            _id: {$gt: lastProjectId}
-        }, null, {
+    var query={
+        isPrivate: false,
+        isHidden: false
+    };
+
+    if(lastProjectId){
+        query._id = {$gt: lastProjectId}
+    }
+
+    Project.find(query, null, {
             sort: {created: 1},
             limit: top
         }, function (err, projects) {
@@ -55,6 +62,10 @@ projectSchema.statics.getById = function (projectId, userId, callback) {
 
         if (!project) {
             return callback(new Error('Not found project.'));
+        }
+
+        if (project.isPrivate && project.userId != userId) {
+            return callback(new Error('Forbidden to get project.'));
         }
 
         callback(null, project);
@@ -107,6 +118,9 @@ projectSchema.methods.updateFields = function (editedFields, callback) {
     }
     if (editedFields.isPrivate) {
         project.isPrivate = editedFields.isPrivate;
+    }
+    if (editedFields.isHidden) {
+        project.isHidden = editedFields.isHidden;
     }
 
     project.save(function (err, status) {
