@@ -1,3 +1,4 @@
+var AnonymousStrategy=require('passport-anonymous');
 var JwtStrategy = require('passport-jwt').Strategy;
 
 var config = require('../index');
@@ -8,4 +9,6 @@ module.exports = function (passport) {
     }, function (jwtPayload, done) {
         done(null, jwtPayload);
     }));
+
+    passport.use(new AnonymousStrategy());
 };

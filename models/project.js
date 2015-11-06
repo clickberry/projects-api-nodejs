@@ -57,10 +57,6 @@ projectSchema.statics.getById = function (projectId, userId, callback) {
             return callback(new Error('Not found project.'));
         }
 
-        if (project.userId != userId && project.isPrivate) {
-            return callback(new Error('Forbidden to get project.'));
-        }
-
         callback(null, project);
     });
 };

@@ -71,9 +71,9 @@ module.exports = function (passport) {
         });
 
     router.get('/:projectId',
-        passport.authenticate('access-token', {session: false, assignProperty: 'payload'}),
+        passport.authenticate(['access-token', 'anonymous'], {session: false, assignProperty: 'payload'}),
         function (req, res, next) {
-            var userId = req.payload.userId;
+            var userId = req.payload && req.payload.userId;
             var projectId = req.params.projectId;
             Project.getById(projectId, userId, function (err, project) {
                 if (err) {
