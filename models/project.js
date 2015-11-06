@@ -1,5 +1,7 @@
 var mongoose = require('mongoose');
 var moment = require('moment');
+var error = require('clickberry-http-errors');
+
 var Schema = mongoose.Schema;
 
 var projectSchema = new Schema({
@@ -36,12 +38,12 @@ projectSchema.statics.create = function (userId, data, callback) {
 };
 
 projectSchema.statics.findNext = function (lastProjectId, top, callback) {
-    var query={
+    var query = {
         isPrivate: false,
         isHidden: false
     };
 
-    if(lastProjectId){
+    if (lastProjectId) {
         query._id = {$gt: lastProjectId}
     }
 
@@ -61,11 +63,11 @@ projectSchema.statics.getById = function (projectId, userId, callback) {
         }
 
         if (!project) {
-            return callback(new Error('Not found project.'));
+            return callback(new error.NotFound());
         }
 
         if (project.isPrivate && project.userId != userId) {
-            return callback(new Error('Forbidden to get project.'));
+            return callback(new error.Forbidden());
         }
 
         callback(null, project);
@@ -79,7 +81,7 @@ projectSchema.statics.edit = function (projectId, userId, editedFields, callback
         }
 
         if (project.userId != userId) {
-            return callback(new Error('Forbidden to edit project.'));
+            return callback(new error.Forbidden());
         }
 
         project.updateFields(editedFields, function (err, newProject) {
@@ -95,7 +97,7 @@ projectSchema.statics.delete = function (projectId, userId, callback) {
         }
 
         if (project.userId != userId) {
-            return callback(new Error('Forbidden to delete project.'));
+            return callback(new error.Forbidden());
         }
 
         project.remove(function (err) {

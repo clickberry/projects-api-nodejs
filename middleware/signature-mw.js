@@ -1,3 +1,4 @@
+var error = require('clickberry-http-errors');
 var config = require('../config');
 var Signature = require('../lib/signature');
 var secret = config.get('sign:secret');
@@ -9,7 +10,7 @@ exports.checkVideos = function (req, res, next) {
     var result = videos.every(checkUriSign);
 
     if (!result) {
-        next(new Error('Bad request. Video signature is bad.'))
+        next(new error.BadRequest());
     } else {
         next();
     }
