@@ -112,16 +112,16 @@ projectSchema.methods.updateFields = function (editedFields, callback) {
     if (editedFields.name) {
         project.name = editedFields.name;
     }
-    if (editedFields.description) {
+    if ('description' in editedFields) {
         project.description = editedFields.description;
     }
-    if (editedFields.imageUri) {
+    if ('imageUri' in editedFields) {
         project.imageUri = editedFields.imageUri;
     }
-    if (editedFields.isPrivate) {
+    if ('isPrivate' in editedFields) {
         project.isPrivate = editedFields.isPrivate;
     }
-    if (editedFields.isHidden) {
+    if ('isHidden' in editedFields) {
         project.isHidden = editedFields.isHidden;
     }
 
