@@ -52,8 +52,8 @@ project-removes | {projectId: *projectId*} | Project ID.
 | created     | Date of create project|
 | videos     | List of [Encoded videos](#encodeded-video-dto)|
 | imageUri | Uri of image |
-| isPrivate| Private statate - true/false |
-| isHidden| Hidden statate - true/false |
+| isPrivate| Private state - true/false |
+| isHidden| Hidden state - true/false |
 | relationToken| JWT with {id: *entity ID*, ownerId: *user ID of entity owner*}|
 
 ### Encodeded Video Dto
@@ -81,6 +81,7 @@ Creates project.
 | description     | Description of project|
 | videos     | List of [Encoded videos](#encodeded-video-dto)|
 | imageUri | Uri of image |
+| isHidden| Hidden state - true/false |
 | isPrivate| Private statate - true/false |
 
 ### Response
@@ -104,6 +105,7 @@ Edits project.
 | name     | Name of project|
 | description     | Description of project|
 | imageUri | Uri of image |
+| isHidden| Hidden state - true/false |
 | isPrivate| Private statate - true/false |
 
 ### Response
