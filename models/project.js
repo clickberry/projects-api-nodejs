@@ -47,6 +47,14 @@ projectSchema.statics.findNext = function (lastProjectId, top, callback) {
         query._id = {$gt: lastProjectId}
     }
 
+    top = parseInt(top);
+    top = isNaN(top) ? 0 : top;
+
+    if(!top){
+        return callback(null, []);
+    }
+
+    console.log('top: ' + top);
     Project.find(query, null, {
             sort: {created: 1},
             limit: top
