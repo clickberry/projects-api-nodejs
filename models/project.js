@@ -44,7 +44,7 @@ projectSchema.statics.findNext = function (lastProjectId, top, callback) {
     };
 
     if (lastProjectId) {
-        query._id = {$gt: lastProjectId}
+        query._id = {$lt: lastProjectId}
     }
 
     top = parseInt(top);
@@ -54,9 +54,8 @@ projectSchema.statics.findNext = function (lastProjectId, top, callback) {
         return callback(null, []);
     }
 
-    console.log('top: ' + top);
     Project.find(query, null, {
-            sort: {created: 1},
+            sort: {created: -1},
             limit: top
         }, function (err, projects) {
             callback(err, projects);

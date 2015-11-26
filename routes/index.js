@@ -45,7 +45,7 @@ module.exports = function (passport) {
         passport.authenticate('access-token', {session: false, assignProperty: 'payload'}),
         function (req, res, next) {
             var userId = req.payload.userId;
-            Project.find({userId: userId}, function (err, projects) {
+            Project.find({userId: userId}, null, {sort: {created: -1}}, function (err, projects) {
                 if (err) {
                     return next(err);
                 }
