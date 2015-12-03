@@ -1,6 +1,6 @@
 {
   "name": "clickberry-projects-api",
-  "version": "0.1.16",
+  "version": "0.2.16",
   "main": "app.js",
   "description": "Projects micro-service on Node.js",
   "scripts": {

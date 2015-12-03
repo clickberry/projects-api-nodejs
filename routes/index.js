@@ -128,6 +128,18 @@ module.exports = function (passport) {
             });
         });
 
+    router.get('/user/:userId', function (req, res, next) {
+        var userId = req.params.userId;
+        Project.find({userId: userId, isPrivate: false, isHidden: false}, null, {sort: {created: -1}}, function (err, projects) {
+            if (err) {
+                return next(err);
+            }
+
+            var projectDtos = projects.map(projectMapper);
+            res.send(projectDtos);
+        });
+    });
+
     return router;
 };
 
