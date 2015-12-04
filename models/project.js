@@ -25,8 +25,8 @@ projectSchema.statics.create = function (userId, data, callback) {
         userId: userId,
         name: data.name,
         description: data.description,
-        isPrivate: data.isPrivate,
-        isHidden: data.isHidden,
+        isPrivate: data.isPrivate || false,
+        isHidden: data.isHidden || false,
         imageUri: data.imageUri,
         videos: data.videos,
         created: moment.utc()
