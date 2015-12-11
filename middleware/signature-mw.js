@@ -1,5 +1,5 @@
 var error = require('clickberry-http-errors');
-var config = require('../config');
+var config = require('clickberry-config');
 var Signature = require('../lib/signature');
 var secret = config.get('sign:secret');
 var signature = new Signature(secret);

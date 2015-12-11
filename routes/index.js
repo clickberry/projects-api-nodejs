@@ -1,14 +1,23 @@
 var express = require('express');
-var signature = require('../middleware/signature-mw');
+var config = require('clickberry-config');
 
+var signature = require('../middleware/signature-mw');
 var Project = require('../models/project');
 
-var Bus = require('../lib/bus-service');
-var bus = new Bus({});
-
-var config = require('../config');
 var RelationToken = require('../lib/relation-token');
 var relationToken = new RelationToken(config.get("token:relationSecret"));
+
+var Bus = require('../lib/bus-service');
+var bus = new Bus({
+    mode: config.get('node:env'),
+    address: config.get('nsqd:address'),
+    port: config.getInt('nsqd:port')
+});
+
+bus.on('reconnect_failed', function (err) {
+    console.log(err);
+    process.exit(1);
+});
 
 var router = express.Router();
 
@@ -130,7 +139,11 @@ module.exports = function (passport) {
 
     router.get('/user/:userId', function (req, res, next) {
         var userId = req.params.userId;
-        Project.find({userId: userId, isPrivate: false, isHidden: false}, null, {sort: {created: -1}}, function (err, projects) {
+        Project.find({
+            userId: userId,
+            isPrivate: false,
+            isHidden: false
+        }, null, {sort: {created: -1}}, function (err, projects) {
             if (err) {
                 return next(err);
             }

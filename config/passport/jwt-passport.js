@@ -1,7 +1,6 @@
 var AnonymousStrategy=require('passport-anonymous');
 var JwtStrategy = require('passport-jwt').Strategy;
-
-var config = require('../index');
+var config = require('clickberry-config');
 
 module.exports = function (passport) {
     passport.use('access-token', new JwtStrategy({
