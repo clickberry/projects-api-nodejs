@@ -127,7 +127,7 @@ Gets all user projects.
 | HTTP       |      Value                                                         |
 |------------|--------------------------------------------------------------------|
 | StatusCode | 200                                                            |
-| Body | [Project Dto](#project-dto)                                                            |
+| Body | List of [Project Dto](#project-dto)                                                            |
 
 ## GET /all?last=&top=
 Gets all public projects from all users.
@@ -143,7 +143,7 @@ Gets all public projects from all users.
 | HTTP       |      Value                                                         |
 |------------|--------------------------------------------------------------------|
 | StatusCode | 200                                                            |
-| Body | [Project Dto](#project-dto)                                                            |
+| Body | List of [Project Dto](#project-dto)                                                            |
 
 ## GET /:projectId
 Gets project by id. Anonymous user gets project if *isPrivate=false*.
@@ -177,12 +177,11 @@ Removes user project by id.
 ## GET /user/:userId
 Gets all public user projects by userId.
 
-### Request
 ### Response
 | HTTP       |      Value                                                         |
 |------------|--------------------------------------------------------------------|
 | StatusCode | 200                                                            |
-| Body | [Project Dto](#project-dto)                                                            |
+| Body | List of [Project Dto](#project-dto)                                                            |
 
 # License
 Source code is under GNU GPL v3 [license](LICENSE).
