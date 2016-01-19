@@ -174,6 +174,16 @@ Removes user project by id.
 |------------|--------------------------------------------------------------------|
 | StatusCode | 200                                                            |
 
+## GET /user/:userId
+Gets all public user projects by userId.
+
+### Request
+### Response
+| HTTP       |      Value                                                         |
+|------------|--------------------------------------------------------------------|
+| StatusCode | 200                                                            |
+| Body | [Project Dto](#project-dto)                                                            |
+
 # License
 Source code is under GNU GPL v3 [license](LICENSE).
 
