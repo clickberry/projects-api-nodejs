@@ -127,7 +127,7 @@ module.exports = function (passport) {
                     return next(err);
                 }
 
-                bus.publishProjectRemove({projectId: projectId}, function (err) {
+                bus.publishProjectDelete({projectId: projectId}, function (err) {
                     if (err) {
                         return next(err);
                     }

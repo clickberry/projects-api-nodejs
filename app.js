@@ -7,7 +7,21 @@ var mongoose = require('mongoose');
 var config = require('clickberry-config');
 var routes = require('./routes/index')(passport);
 
-mongoose.connect(config.get('mongodb:connection'));
+var options = {
+    server: {
+        socketOptions: {
+            keepAlive: 1,
+            connectTimeoutMS: 30000
+        }
+    },
+    replset: {
+        socketOptions: {
+            keepAlive: 1,
+            connectTimeoutMS: 30000
+        }
+    }
+};
+mongoose.connect(config.get('mongodb:connection'), options);
 
 require('./config/passport/jwt-passport')(passport);
 
@@ -20,10 +34,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
-
 app.use(passport.initialize());
-//app.use(passport.session());
-
 app.use(routes);
 
 // catch 404 and forward to error handler

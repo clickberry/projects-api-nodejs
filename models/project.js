@@ -7,6 +7,7 @@ var Schema = mongoose.Schema;
 var projectSchema = new Schema({
     userId: String,
     name: String,
+    nameSort: String,
     description: String,
     imageUri: String,
     created: Date,
@@ -24,11 +25,12 @@ projectSchema.statics.create = function (userId, data, callback) {
     var project = new Project({
         userId: userId,
         name: data.name,
+        nameSort: data.name && data.name.toLowerCase(),
         description: data.description,
         isPrivate: data.isPrivate || false,
         isHidden: data.isHidden || false,
         imageUri: data.imageUri,
-        videos: data.videos,
+        videos: data.videos || [],
         created: moment.utc()
     });
 
@@ -116,8 +118,9 @@ projectSchema.statics.delete = function (projectId, userId, callback) {
 projectSchema.methods.updateFields = function (editedFields, callback) {
     var project = this;
 
-    if (editedFields.name) {
+    if ('name' in editedFields) {
         project.name = editedFields.name;
+        project.nameSort = editedFields.name.toLowerCase();
     }
     if ('description' in editedFields) {
         project.description = editedFields.description;
