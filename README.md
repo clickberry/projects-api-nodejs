@@ -23,7 +23,7 @@ The service should be properly configured with following environment variables.
 
 Key | Value | Description
 :-- | :-- | :-- 
-MONGODB_CONNECTION | mongodb://mongo_host:mongo_port/videos | MongoDB connection string.
+MONGODB_CONNECTION | mongodb://mongo_host:mongo_port/projects | MongoDB connection string.
 TOKEN_ACCESSSECRET | MDdDRDhBOD*** | Access token secret.
 TOKEN_RELATIONSECRET | MDdDRDhBOD*** | Relation token secret.
 NSQD_ADDRESS | bus.yourdomain.com | A hostname or an IP address of the NSQD running instance.
@@ -37,8 +37,8 @@ The service generates events to the Bus (messaging service) in response to API r
 Topic | Message | Description
 :-- | :-- | :--
 project-creates | [Project Dto](#project-dto) | Created project.
-project-edits | [Project Dto](#project-dto) | Edited project.
-project-removes | {projectId: *projectId*} | Project ID.
+project-updates | [Project Dto](#project-dto) | Edited project.
+project-deletes | {projectId: *projectId*} | Project ID.
 
 # API
 ## DTO
