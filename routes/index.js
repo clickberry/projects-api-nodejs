@@ -9,7 +9,7 @@ var relationToken = new RelationToken(config.get("token:relationSecret"));
 
 var Bus = require('../lib/bus-service');
 var bus = new Bus({
-    mode: config.get('node:env'),
+    //mode: config.get('node:env'),
     address: config.get('nsqd:address'),
     port: config.getInt('nsqd:port')
 });

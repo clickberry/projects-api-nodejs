@@ -13,6 +13,7 @@ var projectSchema = new Schema({
     created: Date,
     isPrivate: {type: Boolean, default: false},
     isHidden: {type: Boolean, default: false},
+    deleted: Date,
     videos: [new Schema({
         contentType: String,
         uri: String,
@@ -52,7 +53,7 @@ projectSchema.statics.findNext = function (lastProjectId, top, callback) {
     top = parseInt(top);
     top = isNaN(top) ? 0 : top;
 
-    if(!top){
+    if (!top) {
         return callback(null, []);
     }
 
@@ -109,9 +110,13 @@ projectSchema.statics.delete = function (projectId, userId, callback) {
             return callback(new error.Forbidden());
         }
 
-        project.remove(function (err) {
-            callback(err);
-        });
+        if (!project.deleted) {
+            project.update({deleted: moment.utc()}, function (err) {
+                callback(err);
+            });
+        } else {
+            callback(null);
+        }
     });
 };
 
