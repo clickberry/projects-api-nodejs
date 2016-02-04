@@ -29,6 +29,7 @@ TOKEN_RELATIONSECRET | MDdDRDhBOD*** | Relation token secret.
 NSQD_ADDRESS | bus.yourdomain.com | A hostname or an IP address of the NSQD running instance.
 NSQD_PORT | 4150 | A TCP port number of the NSQD running instance to publish events.
 SIGN_SECRET | MDdDRDhBOD*** | Sekret key for verify signed videos and screenshots URI-s.
+PORT | 8080 | Container port.
 
 # Events
 The service generates events to the Bus (messaging service) in response to API requests.
