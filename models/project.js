@@ -1,8 +1,14 @@
 var mongoose = require('mongoose');
 var moment = require('moment');
 var error = require('clickberry-http-errors');
+var shortId = require('shortid');
 
 var Schema = mongoose.Schema;
+
+var counterSchema = new Schema({
+    id: String,
+    name: String
+});
 
 var projectSchema = new Schema({
     userId: String,
@@ -10,17 +16,27 @@ var projectSchema = new Schema({
     nameSort: String,
     description: String,
     imageUri: String,
-    created: Date,
-    isPrivate: {type: Boolean, default: false},
-    isHidden: {type: Boolean, default: false},
+    created: {type: Date, default: moment.utc()},
+    isPrivate: Boolean,
+    isHidden: Boolean,
     deleted: Date,
     videos: [new Schema({
         contentType: String,
         uri: String,
         width: Number,
         height: Number
+    }, {_id: false})],
+    views: {type: Number, default: 0},
+    reshares: {type: Number, default: 0},
+    viewsCounter: counterSchema,
+    resharesCounter: counterSchema,
+    counters: [new Schema({
+        id: String,
+        name: String,
+        created: {type: Date, default: moment.utc()}
     }, {_id: false})]
 });
+
 
 projectSchema.statics.create = function (userId, data, callback) {
     var project = new Project({
@@ -31,8 +47,9 @@ projectSchema.statics.create = function (userId, data, callback) {
         isPrivate: data.isPrivate || false,
         isHidden: data.isHidden || false,
         imageUri: data.imageUri,
-        videos: data.videos || [],
-        created: moment.utc()
+        videos: data.videos,
+        viewsCounter: {id: 'views', name: 'Views counter'},
+        resharesCounter: {id: 'reshares', name: 'Reshares counter'}
     });
 
     project.save(function (err) {
@@ -67,13 +84,9 @@ projectSchema.statics.findNext = function (lastProjectId, top, callback) {
 };
 
 projectSchema.statics.getById = function (projectId, userId, callback) {
-    Project.findById(projectId, function (err, project) {
+    getById(projectId, function (err, project) {
         if (err) {
             return callback(err);
-        }
-
-        if (!project) {
-            return callback(new error.NotFound());
         }
 
         if (project.isPrivate && project.userId != userId) {
@@ -85,13 +98,9 @@ projectSchema.statics.getById = function (projectId, userId, callback) {
 };
 
 projectSchema.statics.edit = function (projectId, userId, editedFields, callback) {
-    Project.getById(projectId, userId, function (err, project) {
+    getOwnById(projectId, userId, function (err, project) {
         if (err) {
             return callback(err);
-        }
-
-        if (project.userId != userId) {
-            return callback(new error.Forbidden());
         }
 
         project.updateFields(editedFields, function (err, newProject) {
@@ -101,13 +110,9 @@ projectSchema.statics.edit = function (projectId, userId, editedFields, callback
 };
 
 projectSchema.statics.delete = function (projectId, userId, callback) {
-    Project.getById(projectId, userId, function (err, project) {
+    getOwnById(projectId, userId, function (err, project) {
         if (err) {
             return callback(err);
-        }
-
-        if (project.userId != userId) {
-            return callback(new error.Forbidden());
         }
 
         if (!project.deleted) {
@@ -117,6 +122,71 @@ projectSchema.statics.delete = function (projectId, userId, callback) {
         } else {
             callback(null);
         }
+    });
+};
+
+projectSchema.statics.addCounter = function (projectId, userId, name, callback) {
+    getOwnById(projectId, userId, function (err, project) {
+        if (err) {
+            return callback(err);
+        }
+
+        var counter = {
+            id: shortId.generate(),
+            name: name,
+            created: moment.utc()
+        };
+
+        project.update({$push: {counters: counter}}, function (err) {
+            if (err) {
+                return callback(err);
+            }
+
+            callback(null, counter);
+        });
+    });
+};
+
+projectSchema.statics.editCounter = function (projectId, userId, counterId, name, callback) {
+    getOwnById(projectId, userId, function (err, project) {
+        if (err) {
+            return callback(err);
+        }
+
+        Project.update(
+            {_id: projectId, 'counters.id': counterId},
+            {$set: {'counters.$.name': name}},
+            function (err, affected) {
+                if (err) {
+                    return callback(err);
+                }
+
+                if (!affected.n) {
+                    return callback(new error.NotFound());
+                }
+
+                callback(null);
+            });
+    });
+};
+
+projectSchema.statics.deleteCounter = function (projectId, userId, counterId, callback) {
+    getOwnById(projectId, userId, function (err, project) {
+        if (err) {
+            return callback(err);
+        }
+
+        project.update({$pull: {counters: {id: counterId}}}, function (err, affected) {
+            if (err) {
+                return callback(err);
+            }
+
+            if (!affected.nModified) {
+                return callback(new error.NotFound());
+            }
+
+            callback(null);
+        });
     });
 };
 
@@ -144,5 +214,50 @@ projectSchema.methods.updateFields = function (editedFields, callback) {
         callback(err, project, status);
     });
 };
+
+function getById(projectId, callback) {
+    Project.findById(projectId, function (err, project) {
+        if (err) {
+            return callback(err);
+        }
+
+        if (!project) {
+            return callback(new error.NotFound());
+        }
+
+        callback(null, project);
+    });
+}
+
+function getOwnById(projectId, userId, callback) {
+    getById(projectId, function (err, project) {
+        if (err) {
+            return callback(err);
+        }
+
+        if (project.userId != userId) {
+            return callback(new error.Forbidden());
+        }
+
+        callback(null, project);
+    });
+}
+
+function notFound(project, callback) {
+    if (!project) {
+        return callback(new error.NotFound());
+    }
+
+    callback(null, project);
+}
+
+function forbidden(project, callback) {
+    if (project.userId != userId) {
+        return callback(new error.Forbidden());
+    }
+
+    callback(null, project);
+}
+
 
 var Project = module.exports = mongoose.model('Project', projectSchema);

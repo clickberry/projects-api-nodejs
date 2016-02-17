@@ -9,7 +9,7 @@ var relationToken = new RelationToken(config.get("token:relationSecret"));
 
 var Bus = require('../lib/bus-service');
 var bus = new Bus({
-    //mode: config.get('node:env'),
+    mode: config.get('node:env'),
     address: config.get('nsqd:address'),
     port: config.getInt('nsqd:port')
 });
@@ -153,6 +153,63 @@ module.exports = function (passport) {
         });
     });
 
+    router.post('/:projectId/counters',
+        passport.authenticate('access-token', {session: false, assignProperty: 'payload'}),
+        function (req, res, next) {
+            var userId = req.payload.userId;
+            var projectId = req.params.projectId;
+            Project.addCounter(projectId, userId, req.body.name, function (err, counter) {
+                if (err) {
+                    return next(err);
+                }
+
+                var counterDto=counterMapper(counter, projectId, userId);
+                res.status(201);
+                res.send(counterDto);
+            });
+        }
+    );
+
+    router.put('/:projectId/counters/:counterId',
+        passport.authenticate('access-token', {session: false, assignProperty: 'payload'}),
+        function (req, res, next) {
+            var userId = req.payload.userId;
+            var projectId = req.params.projectId;
+            var counterId = req.params.counterId;
+
+            Project.editCounter(projectId, userId, counterId, req.body.name, function (err) {
+                if (err) {
+                    return next(err);
+                }
+
+                res.send();
+            });
+        }
+    );
+
+    router.delete('/:projectId/counters/:counterId',
+        passport.authenticate('access-token', {session: false, assignProperty: 'payload'}),
+        function (req, res, next) {
+            var userId = req.payload.userId;
+            var projectId = req.params.projectId;
+            var counterId = req.params.counterId;
+
+            Project.deleteCounter(projectId, userId, counterId, function (err) {
+                if (err) {
+                    return next(err);
+                }
+
+                bus.publishCounterDelete({ownerId: projectId, id: counterId}, function (err) {
+                    if (err) {
+                        return next(err);
+                    }
+
+                    res.send();
+                });
+            });
+        }
+    );
+
     return router;
 };
 
@@ -167,6 +224,22 @@ function projectMapper(project) {
         isPrivate: project.isPrivate || false,
         isHidden: project.isHidden || false,
         created: project.created,
-        relationToken: relationToken.create(project._id, project.userId)
+        views: project.views,
+        reshares: project.reshares,
+        viewsCounter: counterMapper(project.viewsCounter, project._id, project.userId),
+        resharesCounter: counterMapper(project.resharesCounter, project._id, project.userId),
+        counters: project.counters.map(function(item){
+            return counterMapper(item, project._id, project.userId);
+        }),
+        relationToken: relationToken.create(project._id, project.userId, project.userId)
+    };
+}
+
+function counterMapper(counter, projectId, userId) {
+    return {
+        id: counter.id,
+        name: counter.name,
+        created: counter.created,
+        relationToken: relationToken.create(counter.id, projectId, userId)
     };
 }
