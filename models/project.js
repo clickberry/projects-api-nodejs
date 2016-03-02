@@ -16,7 +16,7 @@ var projectSchema = new Schema({
     nameSort: String,
     description: String,
     imageUri: String,
-    created: {type: Date, default: moment.utc()},
+    created: {type: Date, default: moment.utc},
     isPrivate: Boolean,
     isHidden: Boolean,
     deleted: Date,
@@ -33,7 +33,7 @@ var projectSchema = new Schema({
     counters: [new Schema({
         id: String,
         name: String,
-        created: {type: Date, default: moment.utc()}
+        created: {type: Date, default: moment.utc}
     }, {_id: false})]
 });
 
