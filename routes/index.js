@@ -217,6 +217,7 @@ function projectMapper(project) {
     return {
         id: project._id,
         userId: project.userId,
+        videoId: project.videoId,
         name: project.name,
         description: project.description,
         imageUri: project.imageUri,

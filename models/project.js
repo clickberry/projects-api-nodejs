@@ -12,6 +12,7 @@ var counterSchema = new Schema({
 
 var projectSchema = new Schema({
     userId: String,
+    videoId: String,
     name: String,
     nameSort: String,
     description: String,
@@ -47,7 +48,8 @@ projectSchema.statics.create = function (userId, data, callback) {
         isPrivate: data.isPrivate || false,
         isHidden: data.isHidden || false,
         imageUri: data.imageUri,
-        videos: data.videos,
+        videos: data.videos.encoded,
+        videoId: data.videos.id,
         viewsCounter: {id: 'views', name: 'Views counter'},
         resharesCounter: {id: 'reshares', name: 'Reshares counter'}
     });
