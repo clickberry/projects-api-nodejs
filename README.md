@@ -56,8 +56,8 @@ project-deletes | {projectId: *projectId*} | Project ID.
 | imageUri | Uri of image |
 | isPrivate| Private state - true/false |
 | isHidden| Hidden state - true/false |
-| viewsCounter| Field for views count. **id** alwawys **views**|
-| resharesCounter| Field for reshares count. **id** alwawys **reshares**|
+| viewsCounter| [Counter](#counter-dto). Field for views count. **id** value alwawys **"views"**|
+| resharesCounter| [Counter](#counter-dto). Field for reshares count. **id** value alwawys **"reshares"**|
 | counters| List of [Counters](#counter-dto)|
 | relationToken| JWT with {id: *project ID*, ownerId: *user ID*, userId: *user ID*}|
 
