@@ -64,7 +64,13 @@ project-deletes | {projectId: *projectId*} | Project ID.
 | uri     | Uri of encoding video|
 | width     | Width of video frame|
 | height     | Height of video frame |
-| sign     | Uri signature. **Only for Request**|
+
+### Videos Dto
+| Param   | Description |
+|----------|-------------|
+| id     | Video id|
+| encoded     |List of [Encoded videos](#encodeded-video-dto)|
+| sign     | Signature of concat all encoded video uri and video ID with comma separated **(uri_mp4_360,uri_webm_360,video_id)**|
 
 ## POST /
 Creates project.
@@ -80,7 +86,7 @@ Creates project.
 |----------|-------------|
 | name     | Name of project|
 | description     | Description of project|
-| videos     | List of [Encoded videos](#encodeded-video-dto)|
+| videos     | [Videos](#videos-dto)|
 | imageUri | Uri of image |
 | isHidden| Hidden state - true/false |
 | isPrivate| Private statate - true/false |
