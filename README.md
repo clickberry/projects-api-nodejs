@@ -48,6 +48,7 @@ project-deletes | {projectId: *projectId*} | Project ID.
 |----------|-------------|
 | id     | Project ID.|
 | userId     | Owner user ID|
+| videoId     | Video ID|
 | name     | Name of project|
 | description     | Description of project|
 | created     | Date of create project|
@@ -55,7 +56,10 @@ project-deletes | {projectId: *projectId*} | Project ID.
 | imageUri | Uri of image |
 | isPrivate| Private state - true/false |
 | isHidden| Hidden state - true/false |
-| relationToken| JWT with {id: *entity ID*, ownerId: *user ID of entity owner*}|
+| viewsCounter| Field for views count. **id** alwawys **views**|
+| resharesCounter| Field for reshares count. **id** alwawys **reshares**|
+| counters| List of [Counters](#counter-dto)|
+| relationToken| JWT with {id: *project ID*, ownerId: *user ID*, userId: *user ID*}|
 
 ### Encodeded Video Dto
 | Param   | Description |
@@ -65,12 +69,19 @@ project-deletes | {projectId: *projectId*} | Project ID.
 | width     | Width of video frame|
 | height     | Height of video frame |
 
+### Counter Dto
+| Param   | Description |
+|----------|-------------|
+| id     | Counter ID|
+| name     | Name|
+| relationToken| JWT with {id: *counter ID*, ownerId: *project ID*, userId: *user ID*}|
+
 ### Videos Dto
 | Param   | Description |
 |----------|-------------|
 | id     | Video id|
 | encoded     |List of [Encoded videos](#encodeded-video-dto)|
-| sign     | Signature of concat all encoded video uri and video ID with comma separated **(uri_mp4_360,uri_webm_360,video_id)**|
+| sign     | Signature of concat all encoded video uri and video ID with comma separated *(uri_mp4_360,uri_webm_360,video_id)*|
 
 ## POST /
 Creates project.
